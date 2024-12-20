@@ -50,6 +50,7 @@ public:
 
   void stopStreamingPlugin();
   void startStreamingPlugin(QString streamer_name);
+  void startSPublisherPlugin(QString publisher_name);
   void enableStreamingNotificationsButton(bool enabled);
 
   void setStatusBarMessage(QString message);

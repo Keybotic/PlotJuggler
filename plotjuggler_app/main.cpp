@@ -331,9 +331,12 @@ int main(int argc, char* argv[])
 
   QCommandLineOption start_streamer(QStringList() << "start_streamer",
                                     "Automatically start a Streaming Plugin with the "
-                                    "give filename",
-                                    "file_name (no extension)");
+                                    "give filename");
   parser.addOption(start_streamer);
+
+  QCommandLineOption start_publisher(QStringList() << "start_publisher",
+                                    "Automatically start a publisher plugin");
+  parser.addOption(start_publisher);
 
   QCommandLineOption window_title(QStringList() << "window_title", "Set the window title",
                                   "window_title");
@@ -480,6 +483,10 @@ int main(int argc, char* argv[])
   QNetworkRequest request_message;
   request_message.setUrl(QUrl("https://fastapi-example-7kz3.onrender.com"));
   manager_message.get(request_message);
+  if (parser.isSet(start_publisher))
+  {
+    window->on_buttonPlay_toggled(true);
+  }
 
   return app.exec();
 }

@@ -1966,13 +1966,14 @@ QDomElement MainWindow::savePluginState(QDomDocument& doc)
   AddPlugins(_data_loader);
   AddPlugins(_data_streamer);
   AddPlugins(_toolboxes);
-  AddPlugins(_state_publisher);
+  // AddPlugins(_state_publisher);
 
   for (auto& it : _state_publisher)
   {
     const auto& state_publisher = it.second;
     QDomElement plugin_elem = state_publisher->xmlSaveState(doc);
     plugin_elem.setAttribute("status", state_publisher->enabled() ? "active" : "idle");
+      list_plugins.appendChild(plugin_elem);
   }
 
   return list_plugins;
