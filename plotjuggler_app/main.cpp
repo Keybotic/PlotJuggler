@@ -466,6 +466,11 @@ int main(int argc, char* argv[])
     window->on_buttonStreamingStart_clicked();
   }
 
+  if (parser.isSet(start_publisher))
+  {
+    window->on_buttonPlay_toggled(true);
+  }
+
   QNetworkAccessManager manager_message;
   QObject::connect(&manager_message, &QNetworkAccessManager::finished,
                    [window](QNetworkReply* reply) {
@@ -483,10 +488,24 @@ int main(int argc, char* argv[])
   QNetworkRequest request_message;
   request_message.setUrl(QUrl("https://fastapi-example-7kz3.onrender.com"));
   manager_message.get(request_message);
-  if (parser.isSet(start_publisher))
-  {
-    window->on_buttonPlay_toggled(true);
-  }
+#ifdef COMPILED_WITH_CATKIN
+
+   // Create a QTimer to pump the ROS event loop periodically
+    QTimer rosTimer;
+    QObject::connect(&rosTimer, &QTimer::timeout, [&app]() {
+      if (!ros::isInitialized())
+      {
+        return;
+      }
+        if (!ros::ok()) {
+            qInfo("ROS is shutting down...");
+            QCoreApplication::quit();
+        }
+        ros::spinOnce();
+    });
+
+    rosTimer.start(10); // Check ROS state every 10ms
+#endif
 
   return app.exec();
 }
